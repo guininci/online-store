@@ -1,5 +1,6 @@
-Folder structure for the project:
+# Folder structure for the project:
 
+```
 project-root/
 │
 ├── assets/
@@ -25,11 +26,11 @@ project-root/
 ├── .gitignore
 ├── index.php  (entry point)
 └── README.md
+```
 
 
-
-Script for database creation:
-
+# Script for database creation:
+```
 -- Create Categories Table
 CREATE TABLE categories (
     category_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -81,10 +82,11 @@ CREATE TABLE order_items (
     FOREIGN KEY (order_id) REFERENCES orders(order_id),
     FOREIGN KEY (product_id) REFERENCES products(product_id)
 );
+```
 
+# Script for Database data population:
 
-Script for Database data population:
-
+```
 -- Insert Categories
 INSERT INTO categories (category_name) VALUES
 ('Electronics'),
@@ -101,3 +103,4 @@ INSERT INTO products (category_id, product_name, description, price, stock_quant
 INSERT INTO users (username, password, email, full_name, address, isAdmin) VALUES
 ('john_doe', 'password123', 'john@example.com', 'John Doe', '123 Main St', FALSE),
 ('admin_user', 'admin123', 'admin@example.com', 'Admin Smith', '456 Admin St', TRUE);
+```
