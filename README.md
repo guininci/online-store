@@ -3,7 +3,7 @@
 This project was made using xampp, the only thing you need to do for running the project is:
 
 1. Copy the project folder to your htcdocs
-2. Import the database copying the below points of #Script for database creation and #Script for database population
+2. Import the database copying the below points of #Script for database creation and #Script for database population (or using the "online_store.sql" script present on this repository)
 3. Configure the file /config/mysql.config.php with your database credentials
 
 # Folder structure for the project:
