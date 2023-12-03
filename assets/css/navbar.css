@@ -1,0 +1,33 @@
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px; /* Optional padding for better spacing */
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+
+nav li {
+  display: inline-block;
+  margin-right: 15px; /* Adjust the spacing between links as needed */
+}
+
+nav a {
+  text-decoration: none;
+  color: #333; /* Set your preferred text color */
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.logo img {
+  height: 50px; /* Adjust the height of the image as needed */
+}
+
+.cart-icon {
+  font-size: 20px; /* Adjust the font size as needed */
+}
