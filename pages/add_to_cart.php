@@ -3,7 +3,9 @@
 <?php include_once(__DIR__ . '/../includes/header.php'); ?>
 
 <?php
-session_start();
+if (!isset($_SESSION)) {
+    session_start();
+}
 
 // Check if the product ID and quantity are provided
 if (isset($_POST['product_id'], $_POST['quantity'])) {
@@ -46,6 +48,3 @@ if (isset($_POST['product_id'], $_POST['quantity'])) {
 header("Location: index.php");
 exit();
 ?>
-
-<!-- Footer -->
-<?php include_once(__DIR__ . '/../includes/footer.php'); ?>

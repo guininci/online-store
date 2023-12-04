@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 03-12-2023 a las 23:51:13
+-- Tiempo de generación: 05-12-2023 a las 00:56:32
 -- Versión del servidor: 10.4.6-MariaDB
 -- Versión de PHP: 7.1.32
 
@@ -45,12 +45,34 @@ INSERT INTO `categories` (`category_id`, `category_name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `guests`
+--
+
+CREATE TABLE `guests` (
+  `guest_id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `guests`
+--
+
+INSERT INTO `guests` (`guest_id`, `username`, `email`, `address`, `created_at`) VALUES
+(2, 'dieguuuds@gmail.com', 'dieguuuds@gmail.com', 'Address something off', '2023-12-04 23:36:00');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `orders`
 --
 
 CREATE TABLE `orders` (
   `order_id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
+  `guest_id` int(11) DEFAULT NULL,
   `order_date` timestamp NOT NULL DEFAULT current_timestamp(),
   `total_amount` decimal(10,2) NOT NULL,
   `order_status` enum('Pending','Processing','Shipped','Delivered') DEFAULT 'Pending'
@@ -60,8 +82,12 @@ CREATE TABLE `orders` (
 -- Volcado de datos para la tabla `orders`
 --
 
-INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `total_amount`, `order_status`) VALUES
-(1, 3, '2023-12-03 22:18:17', '599.99', 'Pending');
+INSERT INTO `orders` (`order_id`, `user_id`, `guest_id`, `order_date`, `total_amount`, `order_status`) VALUES
+(1, 4, NULL, '2023-12-04 23:33:34', '59.98', 'Pending'),
+(3, NULL, 2, '2023-12-04 23:36:00', '599.99', 'Pending'),
+(4, 5, NULL, '2023-12-04 23:49:40', '19.99', 'Pending'),
+(5, 6, NULL, '2023-12-04 23:52:10', '599.99', 'Pending'),
+(6, 6, NULL, '2023-12-04 23:54:51', '39.99', 'Pending');
 
 -- --------------------------------------------------------
 
@@ -82,7 +108,12 @@ CREATE TABLE `order_items` (
 --
 
 INSERT INTO `order_items` (`item_id`, `order_id`, `product_id`, `quantity`, `item_price`) VALUES
-(1, 1, 1, 1, '599.99');
+(1, 1, 3, 2, '39.99'),
+(2, 1, 2, 1, '19.99'),
+(4, 3, 1, 1, '599.99'),
+(5, 4, 2, 1, '19.99'),
+(6, 5, 1, 1, '599.99'),
+(7, 6, 3, 1, '39.99');
 
 -- --------------------------------------------------------
 
@@ -130,9 +161,12 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `password`, `email`, `full_name`, `address`, `isAdmin`, `created_at`) VALUES
-(1, 'john_doe', 'password123', 'john@example.com', 'John Doe', '123 Main St', 0, '2023-12-02 16:20:30'),
-(2, 'admin_user', 'admin123', 'admin@example.com', 'Admin Smith', '456 Admin St', 1, '2023-12-02 16:20:30'),
-(3, 'dieguuuds@gmail.com', '1234', 'dieguuuds@gmail.com', 'Diego Romero Pérez', 'Calle Jara nº 31, San Lorenzo de el Escorial', 0, '2023-12-03 22:18:17');
+(1, 'john_doe', 'password123', 'john@example.com', 'John Doe', '123 Main St', 0, '2023-12-04 23:32:31'),
+(2, 'diegoromer', '1234', 'diegoromer@example.com', 'diegoromer', 'Filtered address', 1, '2023-12-04 23:32:31'),
+(3, 'admin_user', 'admin123', 'admin@example.com', 'Admin Smith', '456 Admin St', 1, '2023-12-04 23:32:31'),
+(4, 'diegoromer2', '1234', 'dieguuuds@gmail.com', 'Diego Romero Pérez', 'Some street', 0, '2023-12-04 23:32:52'),
+(5, 'diegoromeroperez@gmail.com', '1234', 'diegoromeroperez@gmail.com', 'diegoromeroperez', 'Some street 2', 0, '2023-12-04 23:49:40'),
+(6, 'diegoromer@gmail.com', '1234', 'diegoromer@gmail.com', 'Diego Romero Pérez', 'Some street 3', 0, '2023-12-04 23:52:10');
 
 --
 -- Índices para tablas volcadas
@@ -145,11 +179,19 @@ ALTER TABLE `categories`
   ADD PRIMARY KEY (`category_id`);
 
 --
+-- Indices de la tabla `guests`
+--
+ALTER TABLE `guests`
+  ADD PRIMARY KEY (`guest_id`),
+  ADD UNIQUE KEY `guest_id` (`guest_id`);
+
+--
 -- Indices de la tabla `orders`
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`order_id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `guest_id` (`guest_id`);
 
 --
 -- Indices de la tabla `order_items`
@@ -185,16 +227,22 @@ ALTER TABLE `categories`
   MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT de la tabla `guests`
+--
+ALTER TABLE `guests`
+  MODIFY `guest_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT de la tabla `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `products`
@@ -206,7 +254,7 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Restricciones para tablas volcadas
@@ -216,7 +264,8 @@ ALTER TABLE `users`
 -- Filtros para la tabla `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`guest_id`) REFERENCES `guests` (`guest_id`);
 
 --
 -- Filtros para la tabla `order_items`

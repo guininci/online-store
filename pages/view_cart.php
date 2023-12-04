@@ -3,7 +3,9 @@
 <?php include_once(__DIR__ . '/../includes/header.php'); ?>
 
 <?php
-session_start();
+if (!isset($_SESSION)) {
+    session_start();
+}
 
 // Check if the cart is not empty
 if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {

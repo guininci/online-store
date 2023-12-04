@@ -70,14 +70,26 @@ CREATE TABLE users (
     UNIQUE KEY (email)
 );
 
+--- Create guests table
+CREATE TABLE guests (
+    guest_id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    address VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY (guest_id)
+);
+
 -- Create Orders Table
 CREATE TABLE orders (
     order_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
+    guest_id INT,
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     total_amount DECIMAL(10, 2) NOT NULL,
     order_status ENUM('Pending', 'Processing', 'Shipped', 'Delivered') DEFAULT 'Pending',
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (guest_id) REFERENCES guests(guest_id)
 );
 
 -- Create Order Items Table
@@ -110,5 +122,6 @@ INSERT INTO products (category_id, product_name, description, price, stock_quant
 -- Insert Users
 INSERT INTO users (username, password, email, full_name, address, isAdmin) VALUES
 ('john_doe', 'password123', 'john@example.com', 'John Doe', '123 Main St', FALSE),
+('diegoromer', '1234', 'diegoromer@example.com', 'diegoromer', 'Filtered address', TRUE),
 ('admin_user', 'admin123', 'admin@example.com', 'Admin Smith', '456 Admin St', TRUE);
 ```
