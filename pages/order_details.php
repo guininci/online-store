@@ -1,7 +1,31 @@
-<!-- Database includes -->
 <?php require_once(__DIR__ . '../../database/db.php'); ?>
+
+<?php
+// Check if the order ID is provided in the URL
+if (isset($_GET['order_id']) && is_numeric($_GET['order_id'])) {
+    $orderId = $_GET['order_id'];
+
+    // Fetch order details
+    $orderQuery = "SELECT * FROM orders WHERE order_id = $orderId";
+    $orderResult = $conn->query($orderQuery);
+
+    if ($orderResult->num_rows > 0) {
+        $order = $orderResult->fetch_assoc();
+
+        // Fetch order items
+        $orderItemsQuery = "SELECT products.product_name, order_items.quantity, order_items.item_price
+                            FROM order_items
+                            INNER JOIN products ON order_items.product_id = products.product_id
+                            WHERE order_items.order_id = $orderId";
+        $orderItemsResult = $conn->query($orderItemsQuery);
+    }
+}
+?>
+
+<!-- Include header -->
 <?php include_once(__DIR__ . '/../includes/header.php'); ?>
 
+<!-- Add the following styles in the head section of your HTML or in a separate CSS file -->
 <style>
     body {
         font-family: 'Arial', sans-serif;
@@ -18,7 +42,7 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
-    .order-confirmation {
+    .order-details {
         text-align: center;
     }
 
@@ -45,8 +69,8 @@
         cursor: pointer;
         font-size: 16px;
         text-decoration: none;
+        margin-top: 20px;
         display: inline-block;
-        margin-top: 10px;
     }
 
     button:hover {
@@ -54,37 +78,18 @@
     }
 </style>
 
-<?php
-// Check if the order ID is provided in the URL
-if (isset($_GET['order_id']) && is_numeric($_GET['order_id'])) {
-    $orderId = $_GET['order_id'];
-
-    // Fetch order details
-    $orderQuery = "SELECT * FROM orders WHERE order_id = $orderId";
-    $orderResult = $conn->query($orderQuery);
-
-    if ($orderResult->num_rows > 0) {
-        $order = $orderResult->fetch_assoc();
-
-        // Fetch order items
-        $orderItemsQuery = "SELECT products.product_name, order_items.quantity, order_items.item_price
-                            FROM order_items
-                            INNER JOIN products ON order_items.product_id = products.product_id
-                            WHERE order_items.order_id = $orderId";
-        $orderItemsResult = $conn->query($orderItemsQuery);
-    }
-}
-?>
-
+<!-- Add any additional styles or header content here -->
 <main>
-    <section class="order-confirmation">
-        <h2>Order Confirmation</h2>
+    <section class="order-details">
+        <h2>Order Details</h2>
         <?php if (isset($order)): ?>
-            <p>Thank you for your order! Here are the details:</p>
-
-            <h3>Order Details</h3>
-            <p>Order ID:
+            <p>Details for Order ID:
                 <?php echo $orderId; ?>
+            </p>
+
+            <h3>Order Information</h3>
+            <p>Order Date:
+                <?php echo $order['order_date']; ?>
             </p>
             <p>Total Amount:
                 <?php echo $order['total_amount']; ?>
@@ -92,8 +97,8 @@ if (isset($_GET['order_id']) && is_numeric($_GET['order_id'])) {
             <p>Order Status:
                 <?php echo $order['order_status']; ?>
             </p>
-            <p>Order Date:
-                <?php echo $order['order_date']; ?>
+            <p>Type of User:
+                <?php echo !$order['user_name'] ? $order['guest_user_name'] . "<strong> (Guest)</strong>" : $order['user_name'] . "<strong> (Registered User)</strong> "; ?>
             </p>
 
             <h3>Ordered Items</h3>
@@ -113,5 +118,12 @@ if (isset($_GET['order_id']) && is_numeric($_GET['order_id'])) {
     </section>
 </main>
 
-<!-- Footer -->
+<!-- Include footer code here if not already included -->
 <?php include_once(__DIR__ . '/../includes/footer.php'); ?>
+
+<!-- Add any additional scripts or footer content here -->
+
+<?php
+// Close the database connection
+$conn->close();
+?>

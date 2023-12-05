@@ -2,6 +2,20 @@
 <?php require_once(__DIR__ . '../../database/db.php'); ?>
 <?php include_once(__DIR__ . '/../includes/header.php'); ?>
 
+<style>
+  .category-products {
+    text-align: center; /* Center the content within the section */
+  }
+
+  .product {
+    display: inline-block; /* Make each product item inline to appear side by side */
+    text-align: left; /* Align the content of each product item to the left */
+    margin: 10px; /* Add some margin around each product item */
+    padding: 10px; /* Add some padding to each product item */
+    border: 1px solid #ccc; /* Add a border for better visibility */
+  }
+</style>
+
 <?php
 // Get the category ID from the URL parameter
 if (isset($_GET['category']) && is_numeric($_GET['category'])) {
@@ -40,7 +54,6 @@ if (isset($_GET['category']) && is_numeric($_GET['category'])) {
                 echo "<h3>{$product['product_name']}</h3>";
                 echo "<p>{$product['description']}</p>";
                 echo "<p>Price: {$product['price']}</p>";
-                // Link each product to its own page (product.php) with the product ID as a parameter
                 echo "<a href='product.php?product={$product['product_id']}'>View Details</a>";
                 echo "</div>";
             }

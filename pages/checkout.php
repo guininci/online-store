@@ -2,6 +2,96 @@
 <?php require_once(__DIR__ . '../../database/db.php'); ?>
 <?php include_once(__DIR__ . '/../includes/header.php'); ?>
 
+<style>
+    .cart-container {
+        text-align: center;
+        margin: auto;
+        max-width: 600px;
+        border-radius: 16px;
+        border: 1px #333 solid;
+        /* Adjust the maximum width as needed */
+    }
+
+    h2 {
+        color: #333;
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+
+    p {
+        color: #666;
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    input,
+    textarea,
+    select {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    .form-container {
+        border: 1px #000 solid;
+        border-radius: 16px;
+        margin: 2%;
+    }
+
+    form {
+        top: 0;
+        margin: 2%;
+        width: 45%;
+        padding: 2%;
+        /* height: 100%; Remove the fixed height */
+        display: inline-block;
+        box-sizing: border-box;
+        /* Ensure that padding and borders are included in the width */
+    }
+
+    /* Add a class to the second form to adjust its margin */
+    .guest-form {
+        display: inline-block;
+        margin-left: 2%;
+        /* Adjust the margin as needed */
+        width: 48%;
+        /* Set width to 48% to allow space for borders and margins */
+        box-sizing: border-box;
+        /* Ensure that padding and borders are included in the width */
+    }
+
+    /* Clearfix to prevent forms from collapsing into each other */
+    .clearfix::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+</style>
+
 <?php
 if (!isset($_SESSION)) {
     session_start();
@@ -9,21 +99,28 @@ if (!isset($_SESSION)) {
 
 // Check if the cart is not empty
 if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
-    // Display the cart summary
+    echo "<div class='cart-container'>";
     echo "<h2>Cart Summary</h2>";
 
     foreach ($_SESSION['cart'] as $item) {
         echo "<p>{$item['name']} - Quantity: {$item['quantity']} - Price: {$item['price']}</p>";
     }
 
-    // Calculate the total price
-    $totalPrice = array_sum(array_column($_SESSION['cart'], 'price'));
+    // Calculate the total price by multiplying price with quantity for each item
+    $totalPrice = array_sum(array_map(function ($item) {
+        return $item['price'] * $item['quantity'];
+    }, $_SESSION['cart']));
+
 
     echo "<p>Total Price: $totalPrice</p>";
 
     // Check if the form is submitted (checkout button clicked)
-    // Collect user data for users (logged, guests and registered)
+    // Collect user data for users (logged, guests, and registered)
     $userData = [];
+
+    // The rest of your code...
+
+    echo "</div>"; // Close the cart-container div
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // If the user is logged in
@@ -143,10 +240,12 @@ if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
     }
 
     if (!isset($_SESSION['user']['user_id'])) {
+        echo "<div class='form-container'>";
+
         // Display the checkout form for registered users
-        echo "<h2>Checkout</h2>";
         echo "<form action='checkout.php' method='post'>";
         echo "<input type='hidden' name='user_type' value='registered'>";
+        echo "<h2>Register Checkout</h2>";
         echo "<label for='full_name'>Full Name:</label>";
         echo "<input type='text' name='full_name' required><br>";
         echo "<label for='password'>Password:</label>";
@@ -169,6 +268,7 @@ if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
         echo "<button type='submit'>Proceed to Confirm Order</button>";
         echo "</form>";
 
+        echo "</div>";
         // JavaScript to toggle visibility of registered fields based on user type selection
         echo "<script>
             document.addEventListener('DOMContentLoaded', function() {

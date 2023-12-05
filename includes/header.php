@@ -14,7 +14,7 @@
 <body>
     <header>
         <link rel="stylesheet" href="/online-store/assets/css/navbar.css">
-        <span class="logo"><img src="https://dummyimage.com/220x50/000/fff" alt="Logo"></span>
+        <span class="logo"><img src="https://dummyimage.com/220x125/000/fff" alt="Logo"></span>
         <nav>
             <ul>
                 <li><a href="/online-store/index.php">Home</a></li>
@@ -39,20 +39,34 @@
             </ul>
         </nav>
         <div>
-            <a class="cart-icon" href="/online-store/pages/view_cart.php">Cart <span class="cart-icon">🛒</span></a>&nbsp;&nbsp;
             <?php
             // Assuming you've already started the session
             if (!isset($_SESSION)) {
                 session_start();
             }
 
+            $cartItemCount = 0;
+
+            // Check if the session variable is set and is an array
+            if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
+                $cartItemCount = count($_SESSION['cart']);
+            } else {
+                $cartItemCount = 0;
+            }
+
+            $cartItemCountStr = $cartItemCount > 0 ? '(' . $cartItemCount . ' elements in the cart)' : '';
+
+            echo "<a class='cart-icon' href='/online-store/pages/view_cart.php'>Cart <span class='cart-icon'>🛒</span>$cartItemCountStr</a>&nbsp;&nbsp;";
+
             // Check if the session variable is set to determine if the user is logged in
             if (isset($_SESSION['user']['user_id'])) {
                 // User is logged in
-                echo "<a class='cart-icon' href='/online-store/pages/logout.php'>Logout</a>";
+                echo "&nbsp;<strong>|</strong>&nbsp;
+                        <a class='cart-icon' href='/online-store/pages/logout.php'>Logout</a>";
             } else {
                 // User is not logged in
-                echo "<a class='cart-icon' href='/online-store/pages/login.php'>Login</a>";
+                echo "&nbsp;<strong>|</strong>&nbsp;
+                        <a class='cart-icon' href='/online-store/pages/login.php'>Login</a>";
             }
             ?>
         </div>

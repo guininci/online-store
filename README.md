@@ -36,6 +36,7 @@ project-root/
 └── README.md
 ```
 
+It is Recommended to use the "online_store.sql" since the following scripts could be not updated.
 
 # Script for database creation:
 ```

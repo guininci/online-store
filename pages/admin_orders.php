@@ -1,6 +1,80 @@
 <!-- Database includes -->
 <?php require_once(__DIR__ . '../../database/db.php'); ?>
 <?php include_once(__DIR__ . '/../includes/header.php'); ?>
+<!-- Add the following styles in the head section of your HTML or in a separate CSS file -->
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+    }
+
+    main {
+        max-width: 800px;
+        margin: 20px auto;
+        background-color: white;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .admin-orders {
+        text-align: center;
+    }
+
+    h2 {
+        color: #333;
+    }
+
+    h3 {
+        color: #4caf50;
+        margin-top: 20px;
+    }
+
+    h4 {
+        color: #4caf50;
+        margin-top: 15px;
+    }
+
+    p {
+        color: #555;
+        line-height: 1.5;
+    }
+
+    .order {
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 10px 0;
+    }
+
+    li {
+        margin-bottom: 5px;
+    }
+
+    .order-details-button {
+        background-color: #4caf50;
+        color: white;
+        padding: 8px 16px;
+        text-decoration: none;
+        border-radius: 4px;
+        display: inline-block;
+        margin-top: 10px;
+        transition: background-color 0.3s;
+    }
+
+    .order-details-button:hover {
+        background-color: #45a049;
+    }
+</style>
 
 <?php
 // Check if the user is logged in and is an admin
@@ -28,6 +102,7 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['user']['isAdmin']) || !$_SESS
         $result = $conn->query($query);
 
         if ($result->num_rows > 0) {
+
             while ($row = $result->fetch_assoc()) {
                 $orderId = $row['order_id'];
                 $orderDate = $row['order_date'];
@@ -46,9 +121,9 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['user']['isAdmin']) || !$_SESS
 
                 // Fetch items in the order
                 $itemsQuery = "SELECT order_items.quantity, order_items.item_price, products.product_name
-                               FROM order_items
-                               JOIN products ON order_items.product_id = products.product_id
-                               WHERE order_items.order_id = $orderId";
+                   FROM order_items
+                   JOIN products ON order_items.product_id = products.product_id
+                   WHERE order_items.order_id = $orderId";
 
                 $itemsResult = $conn->query($itemsQuery);
 
@@ -62,6 +137,9 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['user']['isAdmin']) || !$_SESS
                 } else {
                     echo "<p>No items in this order.</p>";
                 }
+
+                // See Details Button
+                echo "<a href='order_details.php?order_id=$orderId' class='order-details-button'>See Details</a>";
 
                 echo "</div>";
             }

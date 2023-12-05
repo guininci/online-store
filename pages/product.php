@@ -2,6 +2,24 @@
 <?php require_once(__DIR__ . '../../database/db.php'); ?>
 <?php include_once(__DIR__ . '/../includes/header.php'); ?>
 
+<style>
+    .product-container {
+        margin: auto;
+        text-align: center; /* Center the content within the container */
+    }
+
+    .product-details {
+        margin: auto;
+        text-align: left; /* Align the content of each product item to the left */
+        display: inline-block;
+        /* Make it centered */
+        padding: 10px;
+        /* Add some padding to each product item */
+        border: 1px solid #ccc;
+        /* Add a border for better visibility */
+    }
+</style>
+
 <?php
 // Get the product ID from the URL parameter
 if (isset($_GET['product']) && is_numeric($_GET['product'])) {
@@ -25,31 +43,33 @@ if (isset($_GET['product']) && is_numeric($_GET['product'])) {
 }
 ?>
 <main>
-    <section class="product-details">
-        <h2>
-            <?php echo $product['product_name']; ?>
-        </h2>
-        <p>
-            <?php echo $product['description']; ?>
-        </p>
-        <p>Price:
-            <?php echo $product['price']; ?>
-        </p>
-        <!-- Add more product details as needed -->
+    <div class="product-container">
+        <section class="product-details">
+            <h2>
+                <?php echo $product['product_name']; ?>
+            </h2>
+            <p>
+                <?php echo $product['description']; ?>
+            </p>
+            <p>Price:
+                <?php echo $product['price']; ?>
+            </p>
+            <!-- Add more product details as needed -->
 
-        <!-- Option to add the product to the shopping cart -->
-        <?php
-        // Rest of your existing product.php code
-        
-        // Option to add the product to the shopping cart
-        echo "<form action='add_to_cart.php' method='post'>";
-        echo "<input type='hidden' name='product_id' value='{$product['product_id']}'>";
-        echo "<label for='quantity'>Quantity:</label>";
-        echo "<input type='number' name='quantity' id='quantity' value='1' min='1'>";
-        echo "<button type='submit'>Add to Cart</button> <a href='../index.php'><button>Continue shopping</a></button> ";
-        echo "</form>";
-        ?>
-    </section>
+            <!-- Option to add the product to the shopping cart -->
+            <?php
+            // Rest of your existing product.php code
+            
+            // Option to add the product to the shopping cart
+            echo "<form action='add_to_cart.php' method='post'>";
+            echo "<input type='hidden' name='product_id' value='{$product['product_id']}'>";
+            echo "<label for='quantity'>Quantity:</label>";
+            echo "<input type='number' name='quantity' id='quantity' value='1' min='1'>";
+            echo "<button type='submit'>Add to Cart</button> <a href='../index.php'><button>Continue shopping</a></button> ";
+            echo "</form>";
+            ?>
+        </section>
+    </div>
 </main>
 
 <!-- Footer -->
